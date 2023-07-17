@@ -1,0 +1,8 @@
+.country-card-wrapper{
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.country-card-wrapper > div {
+    flex: 1 1 200px;
+  }
