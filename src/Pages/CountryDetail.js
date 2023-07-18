@@ -22,9 +22,11 @@ export default function CountryDetail(props) {
             <div>
                 <div>
                     <p>Name: {detail.name}</p>
+                    <p>Region: {detail.region}</p>
                     <p>Population: {detail.population}</p>
                     <p>Capital: {detail.capital}</p>
-                    <p>Currencies: {detail.currencies.map(currency => currency.name).join(',')}</p>
+                    <p>Currencies: {detail.currencies?.map(currency => currency.name).join(',')}</p>
+                    <p>Languages: {detail.languages?.map(language => language.name).join(',')}</p>
                 </div>
             </div>
 
