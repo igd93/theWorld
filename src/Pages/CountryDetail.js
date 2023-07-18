@@ -19,7 +19,14 @@ export default function CountryDetail(props) {
             <div>
                 <img src={detail.flags?.png} alt={detail.name}/>
             </div>
-            <div></div>
+            <div>
+                <div>
+                    <p>Name: {detail.name}</p>
+                    <p>Population: {detail.population}</p>
+                    <p>Capital: {detail.capital}</p>
+                    <p>Currencies: {detail.currencies.map(currency => currency.name).join(',')}</p>
+                </div>
+            </div>
 
         </div>
     )
