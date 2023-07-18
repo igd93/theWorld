@@ -10,7 +10,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 
 function Home() {
-  const [countriesList, setCountriesList] = useState([])
+  const [countriesList, setCountriesList] = useState([]);
+  const [filteredCountriesList, setFilteredCountriesList] = useState([]);
   const [region, setRegion] = useState('');
   const [countryName, setCountryName] = useState('');
 
@@ -22,23 +23,49 @@ function Home() {
     setCountryName(event.target.value);
   }
 
-
   useEffect(() => {
     getAllCountries().then(result => {
       const countries = result.data;
       setCountriesList(countries);
+      setFilteredCountriesList(countries);
     })
-
   }, []);
+
+  useEffect(() => {
+    if(region === '' && countryName === '') {
+      setFilteredCountriesList(countriesList);
+    } else {
+      let filteredCountries = countriesList;
+      if (region.length) {
+        //step 1: Filtering based on the region
+        filteredCountries = countriesList.filter(country => {               
+          if (country.region === region)
+            return true;
+          return false;
+      });
+    }
+      if(countryName.length) {
+        //step2: Filtering based on country name
+        filteredCountries = countriesList.filter(country => {
+          const lowerCaseName = country.name.toLowerCase();     
+          if (lowerCaseName.includes(countryName.toLowerCase()))
+            return true;
+          return false;
+      });
+      }      
+    setFilteredCountriesList(filteredCountries);
+  }    
+  }, [region, countriesList, countryName]);
+
   return (
     <div className="App">
       <div className="filters-wrapper">
         <TextField
-        id="outlined-basic" 
-        label="Search by Name" 
-        variant="outlined"
-        onChange={handleCountryNameChange}
-        value = {countryName} />
+          id="outlined-basic"
+          label="Search by Name"
+          variant="outlined"
+          onChange={handleCountryNameChange}
+          value={countryName} />
         <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="demo-simple-select-helper-label">Filter by Region</InputLabel>
           <Select
@@ -47,19 +74,20 @@ function Home() {
             value={region}
             label="Search By Region"
             onChange={handleRegionChange}
-          >         
-            <MenuItem value={'africa'}>Africa</MenuItem>
-            <MenuItem value={'americas'}>Americas</MenuItem>
-            <MenuItem value={'asia'}>Asia</MenuItem>
-            <MenuItem value={'europe'}>Europe</MenuItem>
-            <MenuItem value={'oceania'}>Oceania</MenuItem>
+          >
+            <MenuItem value={''}>All</MenuItem>
+            <MenuItem value={'Africa'}>Africa</MenuItem>
+            <MenuItem value={'Americas'}>Americas</MenuItem>
+            <MenuItem value={'Asia'}>Asia</MenuItem>
+            <MenuItem value={'Europe'}>Europe</MenuItem>
+            <MenuItem value={'Oceania'}>Oceania</MenuItem>
           </Select>
-          
-        </FormControl>        
+
+        </FormControl>
       </div>
       <div className="country-card-wrapper">
         {
-          countriesList.map(country => (
+          filteredCountriesList.map(country => (
             <Link to={`/countries/${country.alpha3Code}`}
               key={country.alpha3Code}
               style={{ textDecoration: 'none' }}>
